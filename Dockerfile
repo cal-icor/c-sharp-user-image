@@ -25,6 +25,13 @@ RUN mamba env update -n notebook -f /tmp/environment.yml && \
 
 ENV PATH="${CONDA_DIR}/envs/notebook/lib/dotnet/:${CONDA_DIR}/envs/notebook/bin:${PATH}"
 
+# Install the .NET Interactive (Polyglot) Jupyter kernel so users can compile
+# and run C# in notebook cells. The `dotnet` SDK itself comes from
+# environment.yml (conda-forge dotnet-sdk). https://github.com/dotnet/interactive
+#
+# The tool and kernelspec must live in baked image locations rather than the
+# user's home directory (~/.dotnet, ~/.local/share/jupyter), which is masked by
+# a persistent volume at runtime on the hub.
 ENV DOTNET_CLI_TELEMETRY_OPTOUT=1
 ENV DOTNET_NOLOGO=1
 ENV DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
