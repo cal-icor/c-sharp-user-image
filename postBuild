@@ -24,3 +24,13 @@ for x in \
   ; do
     code-server --extensions-dir ${VSCODE_EXTENSIONS} --install-extension $x
 done
+
+# hide dotfiles from the code-server file explorer by default
+PRODUCT_JSON=${CONDA_DIR}/envs/notebook/share/code-server/lib/vscode/product.json
+python -c "
+import json, os, pathlib
+p = pathlib.Path(os.path.expandvars('$PRODUCT_JSON'))
+d = json.loads(p.read_text())
+d.setdefault('configurationDefaults', {})['files.exclude'] = {'**/.*': True}
+p.write_text(json.dumps(d, indent=2))
+"
